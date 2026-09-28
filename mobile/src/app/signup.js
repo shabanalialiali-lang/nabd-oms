@@ -3,13 +3,14 @@ import { StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { notify } from "../lib/notify";
+import { isValidPhone, normalizePhone, phoneToLoginId } from "../lib/phoneAuth";
 import { Button, Card, Field, Screen, SectionTitle, Segmented } from "../components/ui";
 import TradePicker from "../components/TradePicker";
 import { colors } from "../constants/theme";
 
 export default function Signup() {
   const [accountType, setAccountType] = useState("customer");
-  const [form, setForm] = useState({ fullName: "", phone: "", city: "", email: "", password: "" });
+  const [form, setForm] = useState({ fullName: "", phone: "", city: "", password: "" });
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,8 +20,12 @@ export default function Signup() {
 
   async function handleSignup() {
     setError("");
-    if (!form.fullName || !form.email || form.password.length < 6) {
-      setError("أكمل الاسم والبريد، وكلمة مرور 6 أحرف على الأقل");
+    if (!form.fullName.trim() || form.password.length < 6) {
+      setError("أكمل الاسم، وكلمة مرور 6 أحرف على الأقل");
+      return;
+    }
+    if (!isValidPhone(form.phone)) {
+      setError("اكتب رقم جوال صحيح — ستستخدمه لتسجيل الدخول");
       return;
     }
     if (isTech && trades.length === 0) {
@@ -29,12 +34,12 @@ export default function Signup() {
     }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
-      email: form.email.trim(),
+      email: phoneToLoginId(form.phone),
       password: form.password,
       options: {
         data: {
           full_name: form.fullName.trim(),
-          phone: form.phone.trim(),
+          phone: normalizePhone(form.phone),
           city: form.city.trim(),
           account_type: accountType,
           trades: isTech ? trades : [],
@@ -43,11 +48,11 @@ export default function Signup() {
     });
     setLoading(false);
     if (error) {
-      setError(error.message);
+      setError(/registered|exists/i.test(error.message) ? "رقم الجوال مسجّل من قبل — سجّل الدخول" : error.message);
       return;
     }
     if (!data.session) {
-      notify("تم إنشاء الحساب", "تحقق من بريدك الإلكتروني لتأكيد الحساب ثم سجّل الدخول.");
+      notify("تم إنشاء الحساب", "الحساب بانتظار التفعيل من إدارة التطبيق.");
       router.replace("/login");
       return;
     }
@@ -66,9 +71,8 @@ export default function Signup() {
       />
       <Card>
         <Field label="الاسم الكامل" value={form.fullName} onChangeText={set("fullName")} placeholder="مثال: محمد أحمد" />
-        <Field label="رقم الجوال" value={form.phone} onChangeText={set("phone")} keyboardType="phone-pad" placeholder="05xxxxxxxx" />
+        <Field label="رقم الجوال (للدخول)" value={form.phone} onChangeText={set("phone")} keyboardType="phone-pad" placeholder="05xxxxxxxx" />
         <Field label="المدينة" value={form.city} onChangeText={set("city")} placeholder="مثال: الرياض" />
-        <Field label="البريد الإلكتروني" value={form.email} onChangeText={set("email")} autoCapitalize="none" keyboardType="email-address" />
         <Field label="كلمة المرور" value={form.password} onChangeText={set("password")} secureTextEntry placeholder="6 أحرف على الأقل" />
       </Card>
 

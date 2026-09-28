@@ -60,12 +60,12 @@ export default function ProfileScreen() {
           <Text style={styles.avatarText}>{(form.full_name || "؟").trim().slice(0, 2)}</Text>
         </View>
         <Text style={styles.name}>{form.full_name || "مستخدم"}</Text>
-        <Text style={styles.email}>{user?.email}</Text>
+        <Text style={styles.email}>{profile?.phone || ""}</Text>
       </View>
 
       <Card>
         <Field label="الاسم الكامل" value={form.full_name} onChangeText={set("full_name")} />
-        <Field label="رقم الجوال" value={form.phone} onChangeText={set("phone")} keyboardType="phone-pad" />
+        <Field label="رقم التواصل" value={form.phone} onChangeText={set("phone")} keyboardType="phone-pad" />
         <Field label="المدينة" value={form.city} onChangeText={set("city")} />
         {isTech && <Field label="نبذة عنك وخبرتك" value={form.bio} onChangeText={set("bio")} multiline />}
       </Card>

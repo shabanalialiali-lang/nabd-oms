@@ -253,3 +253,6 @@ grant execute on function public.create_service_order(text, text, text, text, te
 grant execute on function public.accept_service_order(bigint) to authenticated;
 grant execute on function public.update_service_order_status(bigint, text, numeric) to authenticated;
 grant execute on function public.rate_service_order(bigint, smallint, text) to authenticated;
+
+-- دالة التسجيل تعمل كـ trigger فقط، فلا داعي لإتاحتها للاستدعاء المباشر عبر الـ API
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
