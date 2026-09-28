@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "نبض خدمات",
+    "slug": "nabd-services",
+    "scheme": "nabdservices",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nabd.services"
+    },
+    "android": {
+      "package": "com.nabd.services",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A4F52",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    },
+    "extra": {
+      "supportsRTL": true,
+      "forcesRTL": true
+    },
+    "plugins": ["expo-router"]
+  }
+}
