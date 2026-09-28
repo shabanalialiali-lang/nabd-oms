@@ -44,6 +44,15 @@ npx expo start
 
 > مفاتيح Supabase موجودة في `mobile/.env`. لو غيّرت مشروع Supabase عدّل القيمتين هناك.
 
+## نسخة ويب برابط (تنفتح من متصفح الجوال)
+
+1. في https://vercel.com اضغط **Add New → Project** واختر مستودع `nabd-oms`.
+2. في **Root Directory** اختر `mobile` (الإعدادات الباقية تُقرأ من `mobile/vercel.json`).
+3. اضغط **Deploy** — ستحصل على رابط مثل `https://nabd-services.vercel.app`.
+4. من الجوال: افتح الرابط ← «إضافة إلى الشاشة الرئيسية» ليظهر كأيقونة تطبيق.
+
+> يمكن أيضًا استخدام مشروع Vercel المكرر `nabd-oms-986x` بدل إنشاء مشروع جديد: غيّر فيه Root Directory إلى `mobile`.
+
 ## الخطوة 3: النشر على المتاجر (Google Play / App Store)
 
 يتم البناء على سحابة Expo بدون الحاجة لـ Android Studio أو Xcode:
