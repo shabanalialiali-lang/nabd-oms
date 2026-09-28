@@ -46,6 +46,17 @@ npx expo start
 
 ## نسخة ويب برابط (تنفتح من متصفح الجوال)
 
+النسخة المنشورة حاليًا على GitHub Pages: https://shabanalialiali-lang.github.io/nabd-oms/
+
+لتحديثها بعد أي تعديل (من مجلد mobile):
+```
+EXPO_BASE_URL=/nabd-oms npx expo export --platform web
+cp dist/index.html dist/404.html
+```
+ثم ارفع محتوى `dist/` على فرع `gh-pages`.
+
+أو على Vercel:
+
 1. في https://vercel.com اضغط **Add New → Project** واختر مستودع `nabd-oms`.
 2. في **Root Directory** اختر `mobile` (الإعدادات الباقية تُقرأ من `mobile/vercel.json`).
 3. اضغط **Deploy** — ستحصل على رابط مثل `https://nabd-services.vercel.app`.
