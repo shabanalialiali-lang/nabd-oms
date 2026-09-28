@@ -3,22 +3,27 @@ import { StyleSheet, Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../lib/supabase";
+import { isValidPhone, phoneToLoginId } from "../lib/phoneAuth";
 import { Button, Field, Screen } from "../components/ui";
 import { colors } from "../constants/theme";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleLogin() {
     setError("");
+    if (!isValidPhone(phone)) {
+      setError("اكتب رقم جوال صحيح");
+      return;
+    }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    const { error } = await supabase.auth.signInWithPassword({ email: phoneToLoginId(phone), password });
     setLoading(false);
     if (error) {
-      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+      setError(/confirm/i.test(error.message) ? "الحساب لم يُفعّل بعد — تواصل مع إدارة التطبيق" : "رقم الجوال أو كلمة المرور غير صحيحة");
       return;
     }
     router.replace("/");
@@ -35,10 +40,10 @@ export default function Login() {
 
         <View style={styles.card}>
           <Text style={styles.title}>تسجيل الدخول</Text>
-          <Field label="البريد الإلكتروني" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" placeholder="name@example.com" />
+          <Field label="رقم الجوال" value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="05xxxxxxxx" />
           <Field label="كلمة المرور" value={password} onChangeText={setPassword} secureTextEntry placeholder="••••••••" />
           {!!error && <Text style={styles.error}>{error}</Text>}
-          <Button title="دخول" onPress={handleLogin} loading={loading} disabled={!email || !password} />
+          <Button title="دخول" onPress={handleLogin} loading={loading} disabled={!phone || !password} />
           <Link href="/signup" style={styles.link}>
             ليس لديك حساب؟ <Text style={{ fontWeight: "800" }}>أنشئ حسابًا جديدًا</Text>
           </Link>
